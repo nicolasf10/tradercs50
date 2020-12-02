@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<h3>Back-test:</h3>
+<form action="/backtest" method="post">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Back-test length: </label>
+      <br>
+    <select name="period" class="form-control" id="exampleFormControlSelect1">
+      <option value="5">5 years</option>
+      <option value="10">10 years</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect2">Select all stocks you wish to use in your back-test</label>
+      <br>
+    <select name="symbols" multiple class="form-control" id="exampleFormControlSelect2" style="height:170px;">
+      <option value="AAPL">AAPL</option>
+      <option value="MSFT">MSFT</option>
+      <option value="BA">BA</option>
+      <option value="AMD">AMD</option>
+      <option value="XOM">XOM</option>
+      <option value="AMZN">AMZN</option>
+      <option value="GOOGL">GOOGL</option>
+      <option value="JPM">JPM</option>
+    </select>
+      <br>
+      <br>
+      <button class="btn btn-primary" type="submit">Back-test</button>
+
+  </div>
+
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+Requirements:
+
+flask
+matplotlib
+cs50
+tempfile
+flask_session
+werkzeug.exceptions
+werkzeug.security
+numpy
+csv
