@@ -1,13 +1,20 @@
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session, make_response, send_file
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, make_response, send_file, Response
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 from helpers import apology, login_required
 
 from backtesting import backtest, bar_graph
+
+
+purchases = []
 
 # Configure application
 app = Flask(__name__)
@@ -147,7 +154,8 @@ for code in default_exceptions:
 @app.route("/backtest", methods=["GET", "POST"])
 @login_required
 def backtesting():
-    global fig
+    global purchases
+
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Requesting the form results with the name 'period'
@@ -173,7 +181,18 @@ def backtesting():
         best_accuracy_total_change = results[2][0]
         best_accuracy_total_change_value = "{}".format(best_accuracy_total_change)
 
+        purchases = best_accuracy[2]
+
         return render_template("backtestresults.html", results=results, period=period, best_average_increase_value=best_average_increase_value, best_accuracy_value=best_accuracy_value, best_accuracy_total_change_value=best_accuracy_total_change_value)
     else:
         # Return the home page
         return render_template("backtesting.html")
+
+@app.route('/plot.png')
+def plot_png():
+    global purchases
+    purchases = [2, 3, 4]
+    fig = bar_graph(purchases)
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    return Response(output.getvalue(), mimetype='image/png')

@@ -4,6 +4,9 @@ import numpy as np
 from marketdata import get_data
 from matplotlib import pyplot as plt
 
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 def find_lines(data):
     return len(data)
@@ -175,9 +178,12 @@ def bar_graph(self, purchases):
     bar_x = ["<-1", "-0.5 : -1", "-0.0 : -0.5", "0", "0.0 : 0.5", "0.5 : 1", ">1"]
     bar_y = [tran_less_one_n, tran_point_five_to_one_n, tran_zero_to_point_five_n, tran_neutral,
              tran_zero_to_point_five_p, tran_point_five_to_one_p, tran_more_one_p]
+    
+    fig = plt.figure()
     plt.title("Bar (Spreading of transactions)")
-    plt.bar(bar_x, bar_y)
-    return plt
+    plt.plot(bar_x, bar_y)
+    plt.savefig("out.png", format="'png'")
+    return fig
 
 def scatter_graph(purchases):
     # Setting up the scatter graph using matplotlib
@@ -195,3 +201,5 @@ def scatter_graph(purchases):
     plt.figure(1)
     plt.title("Scatter (All transactions)")
     plt.scatter(graph_x, graph_y, s=5)
+
+bar_graph([1, 2], [3, 4]).savefig("image.png")
