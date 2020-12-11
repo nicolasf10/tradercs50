@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<h3>Simulator results: </h3>
+<h4>Congrats! You made ${{ money_made }}</h4>
+<p>The average return was {{ avg_return }}</p>
+<p>The average accuracy was {{ accuracy }}</p>
+<p>You made {{ transactions }} transactions</p>
+<br><br>
+<!--<img src="/plot.png" alt="Plot Results">-->
+<p>{{ x }}</p>
+{% endblock %}

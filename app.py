@@ -5,16 +5,16 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 import io
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 
 from helpers import apology, login_required
 
 from backtesting import backtest, bar_graph
+from simulator import simulate
 
-
-purchases = []
+# TODO 'export FLASK_ENV=development'
 
 # Configure application
 app = Flask(__name__)
@@ -159,7 +159,7 @@ def backtesting():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Requesting the form results with the name 'period'
-        period = request.form.get('period')
+        period = int(request.form.get('period'))
 
         # Requesting the form results with the name 'symbols'
         files = request.form.get('symbols')
@@ -170,28 +170,67 @@ def backtesting():
 
         # Running the function 'run_test' from the class 'backtest'
         # def run_test(self, test_filenames, start_sd, end_sd, start_val, end_val):
-        results = test.run_test(test.test_filenames, test.start_sd, test.end_sd, test.start_val, test.end_val)
+        results = test.run_test(files, test.start_sd, test.end_sd, test.start_val, test.end_val)
 
         best_average_increase = results[0]
         best_average_increase_value = "{:.5%}".format(float(best_average_increase[0]))
 
         best_accuracy = results[1]
-        best_accuracy_value = "{}".format(float(best_accuracy[0]))
+        best_accuracy_value = "{:.5%}".format(float(best_accuracy[0]))
 
-        best_accuracy_total_change = results[2][0]
-        best_accuracy_total_change_value = "{}".format(best_accuracy_total_change)
+        best_total_change = results[2][0]
+        best_total_change_value = "{:.5%}".format(float(best_total_change))
 
         purchases = best_accuracy[2]
 
-        return render_template("backtestresults.html", results=results, period=period, best_average_increase_value=best_average_increase_value, best_accuracy_value=best_accuracy_value, best_accuracy_total_change_value=best_accuracy_total_change_value)
+        return render_template("backtestresults.html", results=results, period=period, best_average_increase_value=best_average_increase_value, best_accuracy_value=best_accuracy_value, best_total_change_value=best_total_change_value, best_accuracy=best_accuracy, x=results[3])
     else:
         # Return the home page
         return render_template("backtesting.html")
 
+@app.route('/simulator', methods=["GET", "POST"])
+@login_required
+def simulator():
+    global purchases
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        # Requesting the form results with the name 'period'
+        period = int(request.form.get('period'))
+
+        # Requesting the form results with the name 'symbol'
+        file = request.form.get('symbol')
+
+        # Requesting the form results with the name 'holding_days'
+        holding_days = request.form.get('holding_days')
+
+        # Requesting the form results with the name 'cash_invested'
+        cash_invested = request.form.get('cash_invested')
+
+        # Requesting the form results with the name 'min_sd'
+        min_sd = request.form.get('min_sd')
+
+        # Requesting the form results with the name 'max_sd'
+        max_sd = request.form.get('max_sd')
+
+        # Creating an instance of the class 'simulate'
+        #def __init__(self, symbol, period, holding_days, cash_invested):
+        simulator = simulate(file, period, holding_days, cash_invested)
+
+        # Running the function 'run_test' from the class 'simulate'
+        # def run_simulation(self, symbol, start_sd, end_sd, start_val, end_val, min_sd, max_sd):
+        results = simulator.run_simulation(simulator.test_filenames, simulator.start_sd, simulator.end_sd, simulator.start_val, simulator.end_val, min_sd, max_sd)
+
+        purchases = results[5]
+
+        return render_template("simulatorresults.html", results=results, period=period, money_made=round(results[0], 2), avg_return="{:.5%}".format(results[1]), transactions=results[4], accuracy=results[3])
+    else:
+        # Return the home page
+        return render_template("simulator.html")
+
 @app.route('/plot.png')
+@login_required
 def plot_png():
     global purchases
-    purchases = [2, 3, 4]
     fig = bar_graph(purchases)
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)

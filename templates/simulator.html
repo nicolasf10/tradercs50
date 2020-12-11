@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<h3>Simulator:</h3>
+<h6>If you don't understand some form inputs, please visit our <a href="/">about page</a>.</h6>
+<form action="/simulator" method="post">
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Back-test length: </label>
+      <br>
+    <select name="period" class="form-control" id="exampleFormControlSelect1" required>
+      <option value="5">5 years</option>
+      <option value="10">10 years</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect2">Select all stocks you wish to use in your back-test</label>
+      <br>
+    <select name="symbol" class="form-control" id="exampleFormControlSelect2" required>
+      <option value="AAPL">AAPL</option>
+      <option value="MSFT">MSFT</option>
+      <option value="BA">BA</option>
+      <option value="AMD">AMD</option>
+      <option value="XOM">XOM</option>
+      <option value="AMZN">AMZN</option>
+      <option value="GOOGL">GOOGL</option>
+      <option value="JPM">JPM</option>
+    </select>
+      <br>
+      <br>
+      <div class="form-group">
+          <label>Amount you wish to be invested every transaction ($):</label>
+          <input name="cash_invested" type="number" class="form-control" placeholder="Ex: 1000">
+      </div>
+      <br>
+      <div class="form-group">
+          <label>Days you wish to hold on to the stock:</label>
+          <input name="holding_days" type="number" class="form-control" placeholder="Ex: 3">
+      </div>
+      <br>
+      <div class="form-group">
+          <label>How many standard deviations need to go down:</label>
+          <input name="min_sd" type="number" step="0.5" lass="form-control" placeholder="Ex: 1.5">
+      </div>
+      <br>
+      <div class="form-group">
+          <label>What is the maximum number of standard deviations that the stock has to go down:</label>
+          <input name="max_sd" type="number" step="0.5" class="form-control" placeholder="Ex: 3.5">
+      </div>
+      <br>
+      <button class="btn btn-primary" type="submit">Simulate</button>
+
+  </div>
+
+</form>
+{% endblock %}

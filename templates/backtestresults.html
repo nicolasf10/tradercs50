@@ -6,11 +6,9 @@
 
 {% block main %}
     <h2>Results</h2>
-    <img href="plot.png">
     <h4>In a period of {{ period }} years, here are your results: </h4>
     <h4>Best Average Increase: {{ best_average_increase_value }}</h4>
     <h4>Best Accuracy: {{ best_accuracy_value }}</h4>
-    <h4>Best Total Change: {{ best_accuracy_total_change_value }}</h4>
-    <img src="/plot.png" alt="my plot">
-    <p>{{ results }}</p>
+    <h4>Best Total Change: {{ best_total_change_value }}</h4>
+    <img src="/plot.png" alt="Plot Results">
 {% endblock %}

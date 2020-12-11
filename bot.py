@@ -94,10 +94,6 @@ class trader():
 
         return results
 
-    def buy(self, information, days, holding_on, stocks_n, filename):
-        pass
-
-
 # This Function returns the average daily percentage change
 def gather_sd(data):
     # TODO use yfinance instead

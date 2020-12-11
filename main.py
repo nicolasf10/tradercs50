@@ -105,7 +105,8 @@ for j in np.arange(0.5, 5.5 , 0.5):
             # Best accuracy
             if float(results['Accuracy']) > float(best_accuracy[0]) and sum_transactions > min_transactions:
                 best_accuracy[0] = '{}'.format(sum_accuracy)
-                best_accuracy[1] = 'Best Total Return: {:.5%} ----- Accuracy: {} ----- Holding Days: {} ----- Max Deviations: {} ---- Min Deviations: {} ----- Transactions: {}'.format(results['Total Change'], results['Accuracy'], results['Holding Days'], results['Max Deviations'], results['Min Deviations'], results['Transactions'])
+                best_accuracy[1] = 'Best Total Return: {:.5%} ----- Accuracy: {} ----- Holding Days: {} ----- Max ' \
+                                   'Deviations: {} ---- Min Deviations: {} ----- Transactions: {}'.format(results['Total Change'], results['Accuracy'], results['Holding Days'], results['Max Deviations'], results['Min Deviations'], results['Transactions'])
 
 
 # print the best results to determine which is the better combination
@@ -114,45 +115,4 @@ print(dict_deviations)
 print('Best Result: {:.4%} ----- {}'.format(float(best_result[0]), best_result[1]))
 print('Best Total Change: {:.4%} ----- {}'.format(float(best_total_change[0]), best_total_change[1]))
 print('Accuracy: {:.4%} ----- {}'.format(float(best_accuracy[0]), best_accuracy[1]))
-
-'''
-print('')
-print('*' * 30, end='\n\n')
-
-# Testing a strategy out with multiple files
-print('Testing a strategy out with multiple files')
-
-# Creating variables to calculate the average accuracy, average return, # transactions, total change
-sum_accuracy = 0
-sum_average_return = 0
-sum_transactions = 0
-sum_total_change = 0
-
-# Looping over all files
-for i in filenames:
-    sd_data = get_data(i, start_sd, end_sd)
-    val_data = get_data(i, start_val, end_val)
-    print(sd_data)
-    # Storing the Standard Deviation of the file
-    dict_deviations = deviation_gatherer(i, sd_data)
-
-    # Creating instance of the class 'trader'
-    # def __init__(self, name, holding_days, sd, min_deviations, max_deviations):
-    bot_test = bot.trader('bot_test', 4, dict_deviations[i], 1, 3)
-
-    # def validate(self, sd, holding_on, filename, lines, max_deviations, min_deviations, start, end, symbol):
-    test_results = bot_test.validate(bot_test.sd, bot_test.holding_days, val_data, find_lines(val_data), bot_test.max_deviations, bot_test.min_deviations, start_val, end_val, symbol)
-
-    sum_accuracy += test_results['Accuracy']
-    sum_average_return += test_results['Average Return']
-    sum_transactions += test_results['Transactions']
-    sum_total_change += test_results['Total Change']
-
-
-test_accuracy = sum_accuracy / len(filenames)
-test_average_return = sum_average_return / len(filenames)
-test_transactions = sum_transactions / len(filenames)
-test_total_change = sum_total_change / len(filenames)
-
-print('ACCURACY: {:.5%}\nAVERAGE RETURN: {:.5%}\nTRANSACTIONS: {}\nTOTAL CHANGE: {:.5%}'.format(test_accuracy, test_average_return, test_transactions, test_total_change))
-'''
+print(market_data)

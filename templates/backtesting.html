@@ -10,7 +10,7 @@
   <div class="form-group">
     <label for="exampleFormControlSelect1">Back-test length: </label>
       <br>
-    <select name="period" class="form-control" id="exampleFormControlSelect1">
+    <select name="period" class="form-control" id="exampleFormControlSelect1" required>
       <option value="5">5 years</option>
       <option value="10">10 years</option>
     </select>
@@ -18,7 +18,7 @@
   <div class="form-group">
     <label for="exampleFormControlSelect2">Select all stocks you wish to use in your back-test</label>
       <br>
-    <select name="symbols" multiple class="form-control" id="exampleFormControlSelect2" style="height:170px;">
+    <select name="symbols" class="form-control" id="exampleFormControlSelect2" required>
       <option value="AAPL">AAPL</option>
       <option value="MSFT">MSFT</option>
       <option value="BA">BA</option>
@@ -31,7 +31,6 @@
       <br>
       <br>
       <button class="btn btn-primary" type="submit">Back-test</button>
-
   </div>
 
 </form>

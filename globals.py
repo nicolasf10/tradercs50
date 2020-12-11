@@ -1,4 +1,6 @@
-from marketdata import get_data
+'''
+This file was used in the development fase of this project.
+'''
 
 # Name of the file (if user wants to change which data to look at there is one variable that allows this)
 all_files = ['data/vale3data.csv', 'data/bbdc4data.csv', 'data/ibovespadata.csv', 'data/itub4data.csv', 'data/petr4data.csv']#, 'data/b3data.csv', 'data/abev3data.csv', 'data/brfs3data.csv', 'data/ciel3data.csv', 'data/cogn3data.csv', 'data/ggb4data.csv', 'data/itsa4data.csv', 'data/lren3data.csv', 'data/mglu3data.csv', 'data/usim5data.csv', 'data/vvar3data.csv', 'data/embr3data.csv']
@@ -20,10 +22,10 @@ entire_transactions = 0
 min_transactions = 50
 
 start_sd = '2000-01-01'
-end_sd = '2010-12-31'
+end_sd = '2010-01-01'
 
-start_val = '2011-01-01'
-end_val = '2020-01-01'
+start_val = '2010-01-02'
+end_val = '2020-01-02'
 
 # Tickers
 filepath_t = 'tickers.csv'
