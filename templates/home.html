@@ -5,11 +5,55 @@
 {% endblock %}
 
 {% block main %}
-    <h2>About DQLSS:</h2>
-    <p>
-        {{ test }}
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae nunc ac lacus luctus finibus sit amet eu nibh. Maecenas semper nec quam sit amet mollis. Pellentesque vel placerat elit. Maecenas feugiat vitae lorem ac tristique. Duis maximus nisi nec diam eleifend, eget cursus ante euismod. Maecenas eget orci sed urna laoreet volutpat. Etiam eget mollis leo. Cras ornare maximus massa vitae dapibus. Praesent tristique erat nec justo finibus scelerisque. Ut aliquam eget metus vulputate vehicula. Nullam id libero tellus. Nam blandit mattis dui ac eleifend.
-        <br>
-        Cras id ornare purus, vel cursus lorem. Sed euismod elit leo, eleifend accumsan turpis cursus et. Phasellus lacinia, mi sit amet consectetur bibendum, dolor ante rutrum odio, ac ornare orci ligula a elit. Praesent finibus tincidunt venenatis. Nam vel ipsum quis lectus suscipit hendrerit. Sed vitae eros egestas, dignissim risus quis, faucibus est. Duis egestas sem risus, id viverra metus pulvinar porttitor. Aenean pretium, nibh eu malesuada egestas, odio sapien dignissim sapien, ut rutrum mi nibh at nunc. Curabitur posuere rhoncus cursus. Sed bibendum commodo fermentum. Quisque nec facilisis est. Nulla aliquet, nulla id tristique scelerisque, nisi nibh porta nunc, quis aliquet mauris sem sed lorem. Fusce semper mattis velit, a dapibus ante luctus vel. Integer imperdiet iaculis ex, eget interdum mi volutpat vitae. Quisque pulvinar lectus nec sapien ultricies, eu suscipit elit sollicitudin. Fusce tristique in mi sit amet rhoncus.
-    </p>
+<div style="text-align: left;">
+    <h1>DQLS Trading - CS50x Final Project</h1>
+<h2>What is DQLS Trading</h2>
+<p>DQLS (Discovering Quantitative Long Stock Strategies) Trading is a platform created to test and simulate a quantitative stock trading strategy. The main part of this project is the Flask Web Application, which allows the user to back-test and find the best combination of strategies over a period of either 5 or 10 years. However, my main focus for this project was working on the back-end of this product.</p>
+<h2>Tools and laungagues used:</h2>
+<ul>
+<li>Python</li>
+<li>HTML &amp; CSS</li>
+<li>Flask</li>
+<li>Matplotlib</li>
+<li>yfinance</li>
+<li>requests</li>
+<li>BeautifulSoup</li>
+<li>csv</li>
+<li>numpy</li>
+<li>cs50</li>
+<li>io</li>
+<li>PIL</li>
+<li>SQLite</li>
+</ul>
+<h2>How does the strategy work?</h2>
+<p>The strategy is based on the hypothesis (which was put to the test in this project)
+that the market overreacts, hence, after a drop in the stock price of a certain amount, the market will readjust,
+increasing the stock price again. To determine that there is a drop that indicates the time to buy a certain stock,
+I used the concept of <a href="https://en.wikipedia.org/wiki/Standard_deviation">standard deviation</a>.</p>
+<p>The first step of my program is taking stock data (from a date before I begin testing to ensure my back-test's validity),
+which is gathered using <code>yfinance</code> and calculating the stock's daily standard deviation. My main tool is back-testing,
+which, again, uses <code>yfinance</code>, and tries trading with the following algorithm (pseudo code):</p>
+<pre><code># The max is there to ensure that the stock is not bought if a massive disaster occurs
+if yesterday_price_change &lt; (min_num_of_standard_deviations * -1) and yesterday_price_change &gt; (max_num_of_standard_deviations * -1) {
+buy_stock()
+}
+sleep(x_days)
+sell_stock()
+</code></pre>
+<p>As you can see in the program above, there are some variables that are not defined, which is also one of the purposes
+of my program, to determine what is the best possible combination of the following:</p>
+<ul>
+<li>How many standard deviations does the stock need to drop?</li>
+<li>What is the maximum amount of standard deviations to prevent the purchase of a stock in the case of a disaster</li>
+<li>What is the optimal number</li>
+</ul>
+<h2>How to run the project</h2>
+<p>Option 1 (with Flask):</p>
+<ul>
+<li>In the terminal export <code>FLASK_APP=development</code></li>
+<li>Run <code>flask run</code> in the terminal
+Option 2 (command-line program):</li>
+<li>Run <code>python main.py</code> in the terminal</li>
+</ul>
+</div>
 {% endblock %}

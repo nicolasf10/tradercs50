@@ -2,10 +2,12 @@ import bot
 from globals import min_transactions
 import numpy as np
 from marketdata import get_data
+import matplotlib
+matplotlib.use('agg')
 from matplotlib import pyplot as plt
 import tempfile
 from PIL import Image
-from io import StringIO
+from io import BytesIO
 from flask import Flask, send_file
 import numpy as np
 from skimage.io import imsave
@@ -113,10 +115,10 @@ class backtest():
                             results['Max Deviations'], results['Min Deviations'], results['Transactions'])
                         best_accuracy[2] = results['Purchases']
 
-        print("nwounuf9eg")
-        print(best_accuracy)
+        # stock_change will store how much the stock changed on its own from start to end of backtest
+        stock_change = (val_data[-1] - val_data[0]) / val_data[0]
 
-        return (best_average_increase, best_accuracy, best_total_change, market_data)
+        return [best_average_increase, best_accuracy, best_total_change, market_data, stock_change]
 
 def bar_graph(purchases):
     # Positive transactions
@@ -163,18 +165,25 @@ def bar_graph(purchases):
     tran_point_five_to_one_n = 0
     tran_less_one_n = 0
     """
-    bar_x = ["<-1", "-0.5 : -1", "-0.0 : -0.5", "0", "0.0 : 0.5", "0.5 : 1", ">1"]
+    bar_x = ["|<-1|", "|-0.5 : -1|", "|-0.0 : -0.5|", "|0|", "|0.0 : 0.5|", "|0.5 : 1|", "|>1|"]
     bar_y = [tran_less_one_n, tran_point_five_to_one_n, tran_zero_to_point_five_n, tran_neutral,
              tran_zero_to_point_five_p, tran_point_five_to_one_p, tran_more_one_p]
     
-    fig = plt.gcf()
-    plt.title("Bar (Spreading of transactions)")
+    fig = plt.figure()
+
+    plt.style.use("ggplot")
+
+    # Creating the title and labeling of the chart
+    plt.title("Spreading of individual transactions")
+    plt.xlabel("Percentage (%) of a single transaction")
+    plt.ylabel("Number of transactions in group")
+
     plt.bar(bar_x, bar_y)
     return fig
 
 def scatter_graph(purchases):
     # Setting up the scatter graph using matplotlib
-    plt.style.use("ggplot")
+    plt.use("ggplot")
     graph_x = []
     graph_y = []
     graph_transactions = 0

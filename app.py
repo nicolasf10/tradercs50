@@ -7,17 +7,18 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 import io
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+import matplotlib
+matplotlib.use('agg')
 
 from helpers import apology, login_required
 
 from backtesting import backtest, bar_graph
 from simulator import simulate
 
-# TODO 'export FLASK_ENV=development'
-
 # Configure application
 app = Flask(__name__)
+# Run in terminal: export FLASK_ENV=development
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -40,6 +41,12 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///dqlss.db")
+
+# Custom filter for formatting as percentage
+def percentage(num):
+    return "{:.3%}".format(float(num))
+
+app.jinja_env.filters["percentage"] = percentage
 
 
 @app.route("/")
@@ -155,7 +162,9 @@ for code in default_exceptions:
 @login_required
 def backtesting():
     global purchases
-
+    global period
+    global results
+    global chart_title
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Requesting the form results with the name 'period'
@@ -172,21 +181,35 @@ def backtesting():
         # def run_test(self, test_filenames, start_sd, end_sd, start_val, end_val):
         results = test.run_test(files, test.start_sd, test.end_sd, test.start_val, test.end_val)
 
-        best_average_increase = results[0]
-        best_average_increase_value = "{:.5%}".format(float(best_average_increase[0]))
+        purchases = results[1][2]
 
-        best_accuracy = results[1]
-        best_accuracy_value = "{:.5%}".format(float(best_accuracy[0]))
+        chart_title = "Best Accuracy"
 
-        best_total_change = results[2][0]
-        best_total_change_value = "{:.5%}".format(float(best_total_change))
-
-        purchases = best_accuracy[2]
-
-        return render_template("backtestresults.html", results=results, period=period, best_average_increase_value=best_average_increase_value, best_accuracy_value=best_accuracy_value, best_total_change_value=best_total_change_value, best_accuracy=best_accuracy, x=results[3])
+        return render_template("backtestresults.html", results=results, period=period, best_average_increase=results[0], best_accuracy=results[1], best_total_change=results[2], stock_change=results[4], chart_title=chart_title)
     else:
         # Return the home page
         return render_template("backtesting.html")
+
+@app.route("/charts", methods=["POST"])
+@login_required
+def charts():
+    global purchases
+    global results
+    global period
+    global chart_title
+    chart = request.form.get("chart")
+    if chart == 'accuracy':
+        purchases = results[1][2]
+        chart_title = "Best Accuracy"
+    elif chart == 'avg_increase':
+        purchases = results[0][2]
+        chart_title = "Best Average Increase"
+    else:
+        purchases = results[2][2]
+        chart_title = "Best Total Change"
+
+    return render_template("backtestresults.html", results=results, period=period, best_average_increase=results[0], best_accuracy=results[1], best_total_change=results[2], stock_change=results[4], chart_title=chart_title)
+
 
 @app.route('/simulator', methods=["GET", "POST"])
 @login_required
@@ -232,6 +255,16 @@ def simulator():
 def plot_png():
     global purchases
     fig = bar_graph(purchases)
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-    return Response(output.getvalue(), mimetype='image/png')
+    return nocache(fig_response(fig))
+
+def fig_response(fig):
+    """Turn a matplotlib Figure into Flask response"""
+    img_bytes = io.BytesIO()
+    fig.savefig(img_bytes)
+    img_bytes.seek(0)
+    return send_file(img_bytes, mimetype='image/png')
+
+def nocache(response):
+    """Add Cache-Control headers to disable caching a response"""
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    return response

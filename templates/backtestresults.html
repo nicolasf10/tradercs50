@@ -6,9 +6,26 @@
 
 {% block main %}
     <h2>Results</h2>
+    <h3>During this period, the stock naturally changed {{ stock_change | percentage}}.</h3>
+    <br>
     <h4>In a period of {{ period }} years, here are your results: </h4>
-    <h4>Best Average Increase: {{ best_average_increase_value }}</h4>
-    <h4>Best Accuracy: {{ best_accuracy_value }}</h4>
-    <h4>Best Total Change: {{ best_total_change_value }}</h4>
+    <h4>Best Average Increase: {{ best_average_increase[0] | percentage }}</h4>
+    <p>Information: {{ best_average_increase[1] }}</p>
+    <br>
+    <h4>Best Accuracy: {{ best_accuracy[0] | percentage}}</h4>
+    <p>Information: {{ best_accuracy[1] }}</p>
+    <br>
+    <h4>Best Total Change: {{ best_total_change[0] | percentage}}</h4>
+    <p>Information: {{ best_total_change[1] }}</p>
+    <form action="/charts" method="post">
+        <select name="chart" class="form-select" aria-label="Default select example">
+            <option selected>View the spreading of transactions of which best performance</option>
+            <option value="accuracy">Best Accuracy</option>
+            <option value="avg_increase">Best Average Increase</option>
+            <option value="total_change">Best Total Change</option>
+        </select>
+        <button class="btn btn-primary" type="submit">Update Chart</button>
+    </form>
+    <h3>{{ chart_title }}</h3>
     <img src="/plot.png" alt="Plot Results">
 {% endblock %}
